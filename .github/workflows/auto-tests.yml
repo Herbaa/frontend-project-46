@@ -11,8 +11,8 @@ jobs:
       - name: Cloning repos
         uses: action/checkout@v3
 
-      - name: Setup Node.js
-        uses: action/setup-node.js@v3
+      - name: Setup Nodejs
+        uses: action/setup-nodejs@v3
 
       - name: Install dependencies
         run: make install
