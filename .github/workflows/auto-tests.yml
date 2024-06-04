@@ -15,12 +15,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-          
-      - name: List files for debugging
-        run: ls -la
 
       - name: Install dependencies
-        run: make install
+        run: install
 
       - name: Make lint
-        run: make lint
+        run: lint
