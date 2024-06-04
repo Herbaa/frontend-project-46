@@ -13,6 +13,7 @@ const getFixturePath = (filePath) => path.join(__dirname, '..', '__fixtures__', 
 const fileData = (filePath) => fs.readFileSync(getFixturePath(filePath), 'utf-8');
 
 // tests for flat files
+
 const referenceFlatFiles = fileData('flat-files-test.txt');
 
 test('Flat JSON', () => {

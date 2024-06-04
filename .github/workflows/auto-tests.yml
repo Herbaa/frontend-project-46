@@ -1,7 +1,7 @@
 name: build
 
 on:
-  - push
+  push:
 
 jobs:
   build:
@@ -11,12 +11,11 @@ jobs:
       - name: Cloning repos
         uses: actions/checkout@v3
 
-      - name: Setup Nodejs
+      - name: Setup Node.js
         uses: actions/setup-node@v3
 
       - name: Install dependencies
-        run: make install
+        run: npm ci
 
       - name: Make lint
-        run: make lint
-    
+        run: npx eslint .
