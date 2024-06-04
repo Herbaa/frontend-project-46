@@ -1,0 +1,21 @@
+name: build
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cloning repos
+        uses: action/checkout@v3
+
+      - name: Setup Node.js
+        uses: action/setup-node.js@v3
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Make lint
+        run: make lint
