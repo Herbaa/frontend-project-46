@@ -9,10 +9,10 @@ jobs:
 
     steps:
       - name: Cloning repos
-        uses: action/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Setup Nodejs
-        uses: action/setup-nodejs@v3
+        uses: actions/setup-nodejs@v3
 
       - name: Install dependencies
         run: make install
