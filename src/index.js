@@ -5,7 +5,7 @@ import _ from 'lodash';
 const readFile = (filepath) => {
   const pathF = path.resolve(process.cwd(), filepath);
   return JSON.parse(fs.readFileSync(pathF, 'utf-8'));
-}
+};
 
 const gendiff = (filepath1, filepath2) => {
   const data1 = readFile(filepath1);
@@ -30,9 +30,9 @@ const gendiff = (filepath1, filepath2) => {
 
     // есть в обоих, но значения одинаковые
     return `    ${key}: ${data1[key]}`;
-  })
-  
-  return `{\n${diffObj.join('\n')}\n}`;
-}
+  });
 
-export default gendiff
+  return `{\n${diffObj.join('\n')}\n}`;
+};
+
+export default gendiff;
