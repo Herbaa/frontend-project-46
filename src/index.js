@@ -1,38 +1,51 @@
+import { readFileSync } from 'node:fs';
 import path from 'path';
-import fs from 'fs';
-import _ from 'lodash';
+import yaml from 'js-yaml';
 
-const readFile = (filepath) => {
-  const pathF = path.resolve(process.cwd(), filepath);
-  return JSON.parse(fs.readFileSync(pathF, 'utf-8'));
+const fileParse = (filepath) => {
+  const extension = path.extname(filepath.toLowerCase());
+  const data = readFileSync(filepath);
+  if (extension === '.yml' || extension === '.yaml') {
+    return yaml.load(data);
+  }
+  return JSON.parse(data);
 };
 
-const gendiff = (filepath1, filepath2) => {
-  const data1 = readFile(filepath1);
-  const data2 = readFile(filepath2);
 
-  const keys = (_.union(_.keys(data1), _.keys(data2))).sort();
-  const diffObj = keys.map((key) => {
-    // есть в первом, но нет во втором
-    if (_.has(data1, key) && !_.has(data2, key)) {
-      return `  - ${key}: ${data1[key]}`;
+const diffConfigs = (config1, config2) => {
+  const uniqueKeys = {};
+  Object.keys(config1).forEach((key) => { uniqueKeys[key] = 1; });
+  Object.keys(config2).forEach((key) => { uniqueKeys[key] = 1; });
+
+  // Сортировка уник ключей
+  const uniqueKeysArray = Object.keys(uniqueKeys);
+  uniqueKeysArray.sort();
+
+  // Вывод отличий
+  let output = '';
+  uniqueKeysArray.forEach((key) => {
+    const has1 = Object.hasOwn(config1, key);
+    const has2 = Object.hasOwn(config2, key);
+    const value1 = config1[key];
+    const value2 = config2[key];
+    if (has1 && has2 && value1 === value2) {
+      output += `    ${key}: ${value1}\n`;
+      return;
     }
-
-    // есть во втором, но нет в первом
-    if (_.has(data2, key) && !_.has(data1, key)) {
-      return `  + ${key}: ${data2[key]}`;
+    if (has1) {
+      output += `  - ${key}: ${value1}\n`;
     }
-
-    // есть в обоих, но значения разные
-    if (data1[key] !== data2[key]) {
-      return `  - ${key}: ${data1[key]}\n  + ${key}: ${data2[key]}`;
+    if (has2) {
+      output += `  + ${key}: ${value2}\n`;
     }
-
-    // есть в обоих, но значения одинаковые
-    return `    ${key}: ${data1[key]}`;
   });
-
-  return `{\n${diffObj.join('\n')}\n}`;
+  return `{\n${output}}`;
 };
 
-export default gendiff;
+const diff = (filepath1, filepath2) => {
+  const config1 = fileParse(filepath1);
+  const config2 = fileParse(filepath2);
+  return diffConfigs(config1, config2);
+};
+
+export default diff;
