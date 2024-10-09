@@ -11,7 +11,6 @@ const fileParse = (filepath) => {
   return JSON.parse(data);
 };
 
-
 const diffConfigs = (config1, config2) => {
   const uniqueKeys = {};
   Object.keys(config1).forEach((key) => { uniqueKeys[key] = 1; });
