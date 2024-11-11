@@ -36,6 +36,6 @@ test('diff json plain', () => {
 });
 
 test('diff json', () => {
-  const answer = JSON.parse(readFileSync(pathToFixture('expected_json.json')).toString());
+  const answer = JSON.parse(readFileSync(pathToFixture('expected_json.txt')).toString());
   expect(JSON.parse(diff(pathToFixture('file1.json'), pathToFixture('file2.json'), 'json'))).toStrictEqual(answer);
 });
