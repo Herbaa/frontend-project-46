@@ -26,7 +26,7 @@ test('diff yaml', () => {
     '}',
   ];
 
-  expect(diff(pathToFixture('file1.yaml'), pathToFixture('file2.yml'))).toBe(answer.join('\n'));
+  expect(diff(pathToFixture('file1.yaml'), pathToFixture('file2.yaml'))).toBe(answer.join('\n'));
 });
 
 test('diff json plain', () => {
