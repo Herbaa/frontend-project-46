@@ -1,9 +1,4 @@
-const isObject = (value) => {
-  if (typeof value === 'object' && value !== null) {
-    return true;
-  }
-  return false;
-};
+import { isObject, keyPath } from '../utils.js';
 
 const dumpValue = (value) => {
   if (isObject(value)) {
@@ -15,30 +10,18 @@ const dumpValue = (value) => {
   return value;
 };
 
-const keyPath = (path, command) => path.map((pathElement) => `${pathElement}.`).join('') + command.key;
-
-export default (diff) => {
-  const output = [];
-  const path = [];
-  diff.forEach((command) => {
-    switch (command.type) {
-      case 'added':
-        output.push(`Property '${keyPath(path, command)}' was added with value: ${dumpValue(command.newValue)}`);
-        break;
-      case 'removed':
-        output.push(`Property '${keyPath(path, command)}' was removed`);
-        break;
-      case 'changed':
-        output.push(`Property '${keyPath(path, command)}' was updated. From ${dumpValue(command.oldValue)} to ${dumpValue(command.newValue)}`);
-        break;
-      case 'in':
-        path.push(command.key);
-        break;
-      case 'out':
-        path.pop();
-        break;
-      default:
-    }
-  });
-  return output.join('\n');
-};
+const format = (diff, path = []) => diff.map((command) => {
+  switch (command.type) {
+    case 'added':
+      return `Property '${keyPath(path, command)}' was added with value: ${dumpValue(command.newValue)}`;
+    case 'removed':
+      return `Property '${keyPath(path, command)}' was removed`;
+    case 'changed':
+      return `Property '${keyPath(path, command)}' was updated. From ${dumpValue(command.oldValue)} to ${dumpValue(command.newValue)}`;
+    case 'nested':
+      return format(command.children, [...path, command.key]);
+    default:
+      return '';
+  }
+}).filter((string) => string).join('\n');
+export default format;

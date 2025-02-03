@@ -1,55 +1,51 @@
-const isObject = (value) => {
-  if (typeof value === 'object' && value !== null) {
-    return true;
-  }
-  return false;
-};
+import { isObject } from '../utils.js';
 
 const dumpValue = (value, prefix) => {
   if (!isObject(value)) {
     return value;
   }
-  let output = '';
-  Object.keys(value).sort().forEach((key) => {
+  const output = Object.keys(value).toSorted().map((key) => {
     const dump = dumpValue(value[key], `${prefix}    `);
-    output += `${prefix}        ${key}: ${dump}\n`;
-  });
+    return `${prefix}        ${key}: ${dump}\n`;
+  }).join('');
   return `{\n${output}${prefix}    }`;
 };
 
-export default (diff) => {
-  let output = '{\n';
-  let prefix = '';
-  diff.forEach((command) => {
-    let dump;
+const formatAddedOrRemoved = (prefix, key, value, symbol) => {
+  const dump = dumpValue(value, prefix);
+  return `${prefix}  ${symbol} ${key}: ${dump}\n`;
+};
+
+const formatChanged = (prefix, command) => {
+  const dump1 = dumpValue(command.oldValue, prefix);
+  const dump2 = dumpValue(command.newValue, prefix);
+  return `${prefix}  - ${command.key}: ${dump1}\n${prefix}  + ${command.key}: ${dump2}\n`;
+};
+
+const formatNoChange = (prefix, command) => `${prefix}    ${command.key}: ${command.value}\n`;
+
+const format = (diff, prefix = '') => {
+  const formatNested = (command) => {
+    const childrenDiff = format(command.children, `${prefix}    `);
+    return `${prefix}    ${command.key}: ${childrenDiff}\n`;
+  };
+  const output = diff.map((command) => {
     switch (command.type) {
       case 'added':
-        dump = dumpValue(command.newValue, prefix);
-        output += `${prefix}  + ${command.key}: ${dump}\n`;
-        break;
+        return formatAddedOrRemoved(prefix, command.key, command.newValue, '+');
       case 'removed':
-        dump = dumpValue(command.oldValue, prefix);
-        output += `${prefix}  - ${command.key}: ${dump}\n`;
-        break;
+        return formatAddedOrRemoved(prefix, command.key, command.oldValue, '-');
       case 'changed':
-        dump = dumpValue(command.oldValue, prefix);
-        output += `${prefix}  - ${command.key}: ${dump}\n`;
-        dump = dumpValue(command.newValue, prefix);
-        output += `${prefix}  + ${command.key}: ${dump}\n`;
-        break;
+        return formatChanged(prefix, command);
       case 'no change':
-        output += `${prefix}    ${command.key}: ${command.value}\n`;
-        break;
-      case 'in':
-        output += `${prefix}    ${command.key}: {\n`;
-        prefix += '    ';
-        break;
-      case 'out':
-        prefix = prefix.slice(4);
-        output += `${prefix}    }\n`;
-        break;
+        return formatNoChange(prefix, command);
+      case 'nested':
+        return formatNested(command);
       default:
+        return '';
     }
-  });
-  return `${output}}`;
+  }).join('');
+  return `{\n${output}${prefix}}`;
 };
+
+export default format;

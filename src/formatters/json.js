@@ -1,23 +1,15 @@
-const keyPath = (path, command) => path.map((pathElement) => `${pathElement}.`).join('') + command.key;
+import { keyPath } from '../utils.js';
 
-export default (diff) => {
-  const output = [];
-  const path = [];
-  diff.forEach((command) => {
-    switch (command.type) {
-      case 'added':
-      case 'removed':
-      case 'changed':
-        output.push({ ...command, key: keyPath(path, command) });
-        break;
-      case 'in':
-        path.push(command.key);
-        break;
-      case 'out':
-        path.pop();
-        break;
-      default:
-    }
-  });
-  return JSON.stringify(output, null, 2);
-};
+const format = (diff, path = []) => diff.flatMap((command) => {
+  switch (command.type) {
+    case 'added':
+    case 'removed':
+    case 'changed':
+      return { ...command, key: keyPath(path, command) };
+    case 'nested':
+      return format(command.children, [...path, command.key]);
+    default:
+      return [];
+  }
+});
+export default (diff) => JSON.stringify(format(diff), null, 2);
