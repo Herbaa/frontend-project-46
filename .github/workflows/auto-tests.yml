@@ -33,9 +33,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: make install
-      - run: make lint
-      - run: make test
+      - run: npm ci
+      - run: npx eslint . --fix
+      - run: npm test
       - name: Test & publish code coverage
         # Publish code coverage on Code Climate
         # https://github.com/paambaati/codeclimate-action
@@ -44,5 +44,5 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: make test-coverage
+          coverageCommand: npm test -- --coverage --coverageProvider=v8
           debug: true
