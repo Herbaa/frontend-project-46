@@ -34,7 +34,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
-      - run: npx eslint . --fix
       - run: npm test
       - name: Test & publish code coverage
         # Publish code coverage on Code Climate
