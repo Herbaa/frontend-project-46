@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import { readFileSync } from 'node:fs';
 import path from 'path';
 import yaml from 'js-yaml';

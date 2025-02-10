@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint import/extensions: "off" */
 import { program } from 'commander';
 import diff from '../src/diff.js';
 

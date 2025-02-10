@@ -22,6 +22,8 @@
     "wsl": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
     "@eslint/create-config": "^1.0.0",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.12.0",

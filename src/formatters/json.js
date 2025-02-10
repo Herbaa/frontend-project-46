@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import { keyPath } from '../utils.js';
 
 const format = (diff, path = []) => diff.flatMap((command) => {

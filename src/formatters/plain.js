@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import { isObject, keyPath } from '../utils.js';
 
 const dumpValue = (value) => {

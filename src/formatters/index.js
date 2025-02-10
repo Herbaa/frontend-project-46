@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import formatPlain from './plain.js';
 import formatStylish from './stylish.js';
 import formatJSON from './json.js';

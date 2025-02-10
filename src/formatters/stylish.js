@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import { isObject } from '../utils.js';
 
 const dumpValue = (value, prefix) => {

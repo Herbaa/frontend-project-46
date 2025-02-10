@@ -1,3 +1,4 @@
+/* eslint import/extensions: "off" */
 import fileParse from './parsers.js';
 import format from './formatters/index.js';
 import { isObject, uniqueKeys } from './utils.js';
